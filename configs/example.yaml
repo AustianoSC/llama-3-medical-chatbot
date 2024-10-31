@@ -1,0 +1,34 @@
+model:
+  path: "bert-base-uncased"
+  load_in_4bit: true
+  torch_dtype: "float16"
+  attn_implementation: "eager"
+
+dataset:
+  name: "ruslanmv/ai-medical-chatbot"
+  split: 0.2
+  shuffle_seed: 65
+  select_top_n: 1000
+
+training:
+  output_dir: "./fine-tuned-model"
+  batch_size: 1
+  gradient_accumulation_steps: 2
+  num_train_epochs: 1
+  evaluation_strategy: "steps"
+  eval_steps: 0.2
+  logging_steps: 1
+  warmup_steps: 10
+  learning_rate: 2e-4
+  fp16: false
+  bf16: false
+  group_by_length: true
+  report_to: "wandb"
+
+peft:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  bias: "none"
+  task_type: "CAUSAL_LM"
+  target_modules: ['up_proj', 'down_proj', 'gate_proj', 'k_proj', 'q_proj', 'v_proj', 'o_proj']
