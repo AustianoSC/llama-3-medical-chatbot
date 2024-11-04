@@ -1,6 +1,9 @@
-from datasets import load_dataset
+from datasets import load_dataset, DatasetDict
+from transformers import AutoTokenizer
 
-def prepare_dataset(config, tokenizer):
+from models.AppConfig import AppConfig
+
+def prepare_dataset(config: AppConfig, tokenizer: AutoTokenizer) -> DatasetDict:
     dataset_config = config['dataset']
     dataset = load_dataset(dataset_config['name'], split="all")
     dataset = dataset.shuffle(seed=dataset_config['shuffle_seed']).select(range(dataset_config['select_top_n']))

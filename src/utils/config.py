@@ -11,7 +11,7 @@ def get_required_env_var(env_var_name: str) -> str:
         raise ValueError(f"Environment variable {env_var_name} is required.")
     return env_var
 
-def load_config(config_path) -> AppConfig:
+def load_config(config_path: str) -> AppConfig:
     load_dotenv()
     with open(config_path, 'r') as file:
         config_data = yaml.safe_load(file)
