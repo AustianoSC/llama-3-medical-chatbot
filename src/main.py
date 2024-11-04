@@ -2,11 +2,9 @@ from utils.config import load_config
 from core.model_init import initialize_model, apply_peft
 from core.datasets import prepare_dataset
 from core.train import train_model
-from dotenv import load_dotenv
 
 def main(config_path):
     # Load environment variables and configs
-    load_dotenv()
     config = load_config(config_path)
     
     # Initialize model and tokenizer
@@ -26,5 +24,5 @@ def main(config_path):
     trainer.model.push_to_hub(config['training']['output_dir'], use_temp_dir=False)
 
 if __name__ == "__main__":
-    config_path = "config.yaml"
+    config_path = "configs/example.yaml"
     main(config_path)
