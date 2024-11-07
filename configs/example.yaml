@@ -1,17 +1,17 @@
 model:
-  path: "bert-base-uncased"
+  path: "meta-llama/Llama-3.1-8B"
   load_in_4bit: true
   torch_dtype: "float16"
   attn_implementation: "eager"
 
 dataset:
   name: "ruslanmv/ai-medical-chatbot"
-  split: 0.2
+  test_split: 0.1
   shuffle_seed: 65
   select_top_n: 1000
 
 training:
-  output_dir: "./fine-tuned-model"
+  output_dir: "./llama-3-8b-chat-doctor"
   batch_size: 1
   epochs: 1
   gradient_accumulation_steps: 2
