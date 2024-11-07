@@ -1,11 +1,11 @@
 from trl import SFTTrainer
 from datasets import DatasetDict
 from transformers import TrainingArguments
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from models.AppConfig import AppConfig
 
-def train_model(model: AutoModelForCausalLM, tokenizer: AutoTokenizer, dataset: DatasetDict, config: AppConfig):
+def train_model(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, dataset: DatasetDict, config: AppConfig):
     training_args = TrainingArguments(
         output_dir=config.training.output_dir,
         per_device_train_batch_size=config.training.batch_size,
