@@ -11,10 +11,11 @@ dataset:
   select_top_n: 1000
 
 training:
-  output_dir: "./llama-3-8b-chat-doctor"
+  output_dir: "llama-3-8b-chat-doctor"
   batch_size: 1
   epochs: 1
   gradient_accumulation_steps: 2
+  optimizer: "paged_adamw_32bit"
   evaluation_strategy: "steps"
   eval_steps: 0.2
   logging_steps: 1

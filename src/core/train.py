@@ -9,7 +9,9 @@ def train_model(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, dataset:
     training_args = TrainingArguments(
         output_dir=config.training.output_dir,
         per_device_train_batch_size=config.training.batch_size,
+        per_device_eval_batch_size=config.training.batch_size,
         gradient_accumulation_steps=config.training.gradient_accumulation_steps,
+        optim=config.training.optimizer,
         num_train_epochs=config.training.epochs,
         evaluation_strategy=config.training.evaluation_strategy,
         eval_steps=config.training.eval_steps,

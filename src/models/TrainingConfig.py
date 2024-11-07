@@ -9,6 +9,7 @@ class TrainingConfig(BaseModel):
     warmup_steps: Optional[int] = Field(1000, title="Warmup Steps", description="The number of warmup steps to use for training.")
     weight_decay: Optional[float] = Field(0.01, title="Weight Decay", description="The weight decay to use for training.")
     gradient_accumulation_steps: Optional[int] = Field(1, title="Gradient Accumulation Steps", description="The number of gradient accumulation steps to use for training.")
+    optimizer: Optional[str] = Field("adamw_torch", title="Optimizer", description="The optimizer to use for training.")
     max_grad_norm: Optional[float] = Field(1.0, title="Max Grad Norm", description="The maximum gradient norm to use for training.")
     evaluation_strategy: Optional[str] = Field("steps", title="Evaluation Strategy", description="The evaluation strategy to use for training.")
     eval_steps: Optional[float] = Field(0.2, title="Eval Steps Interval", description="The interval to evaluate the model.")
