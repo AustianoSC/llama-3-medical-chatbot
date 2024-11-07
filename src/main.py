@@ -1,3 +1,4 @@
+import gc
 import torch
 import wandb
 import huggingface_hub as hf_hub
@@ -5,7 +6,7 @@ import huggingface_hub as hf_hub
 from utils.config import load_config
 from core.train import train_model
 from core.datasets import prepare_dataset
-from core.model_init import initialize_model, apply_peft_to_model, merge_base_model_with_adapter
+from core.model_init import initialize_model_quantized, initialize_model_for_merge, apply_peft_to_model, merge_base_model_with_adapter
 
 def main(config_path):
     # Load environment variables and configs
@@ -16,7 +17,7 @@ def main(config_path):
     wandb.login(key=config.env_vars.wandb_api_key)
 
     # Initialize model and tokenizer
-    model, tokenizer = initialize_model(config)
+    model, tokenizer = initialize_model_quantized(config)
     
     # Apply PEFT
     model = apply_peft_to_model(model, config)
@@ -32,13 +33,25 @@ def main(config_path):
     trainer.model.push_to_hub(config.training.output_dir, use_temp_dir=False)
     wandb.finish()
 
-    # Delete old model and tokenizer so we can initialize base model/tokenizer again
-    del model, tokenizer
+    # Delete old model, tokenizer, dataset, and trainer so we can initialize base model/tokenizer again
+    del model, tokenizer, dataset, trainer.model, trainer
+    
+    # Cleanup remaning tensors from PyTorch caching
+    for obj in gc.get_objects():
+        try:
+            if torch.is_tensor(obj) or (hasattr(obj, 'data') and torch.is_tensor(obj.data)):
+                del obj
+        except AttributeError:
+            continue
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
+        gc.collect()
+    with torch.no_grad():
+        torch.cuda.empty_cache()
+        gc.collect()
 
     # Initialize model and tokenizer again so we can combine with adapter model
-    model, tokenizer = initialize_model(config)
+    model, tokenizer = initialize_model_for_merge(config)
 
     # Merge base model with adapter model
     model = merge_base_model_with_adapter(model, config.training.output_dir)
