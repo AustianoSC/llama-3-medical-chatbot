@@ -2,9 +2,9 @@ import wandb
 import huggingface_hub as hf_hub
 
 from utils.config import load_config
-from core.model_init import initialize_model, apply_peft
-from core.datasets import prepare_dataset
 from core.train import train_model
+from core.datasets import prepare_dataset
+from core.model_init import initialize_model, apply_peft_to_model, merge_base_model_with_adapter
 
 def main(config_path):
     # Load environment variables and configs
@@ -18,7 +18,7 @@ def main(config_path):
     model, tokenizer = initialize_model(config)
     
     # Apply PEFT
-    model = apply_peft(model, config)
+    model = apply_peft_to_model(model, config)
     
     # Prepare dataset
     dataset = prepare_dataset(config, tokenizer)
@@ -30,6 +30,18 @@ def main(config_path):
     trainer.model.save_pretrained(config.training.output_dir)
     trainer.model.push_to_hub(config.training.output_dir, use_temp_dir=False)
     wandb.finish()
+
+    # Initialize model and tokenizer again so we can combine with adapter model
+    model, tokenizer = initialize_model(config)
+
+    # Merge base model with adapter model
+    model = merge_base_model_with_adapter(model, config.training.output_dir)
+
+    # Save and push the merged model
+    model.save_pretrained(config.training.output_dir)
+    tokenizer.save_pretrained(config.training.output_dir)
+    model.push_to_hub(config.training.output_dir, use_temp_dir=False)
+    tokenizer.push_to_hub(config.training.output_dir, use_temp_dir=False)
 
 if __name__ == "__main__":
     config_path = "configs/example.yaml"

@@ -23,7 +23,7 @@ def initialize_model(config: AppConfig) -> tuple[PreTrainedModel, PreTrainedToke
     model, tokenizer = setup_chat_format(model, tokenizer)
     return model, tokenizer
 
-def apply_peft(model: PreTrainedModel, config: AppConfig) -> (PeftModel | PeftMixedModel):
+def apply_peft_to_model(model: PreTrainedModel, config: AppConfig) -> (PeftModel | PeftMixedModel):
     peft_config = LoraConfig(
         r=config.peft.r,
         lora_alpha=config.peft.lora_alpha,
@@ -34,3 +34,7 @@ def apply_peft(model: PreTrainedModel, config: AppConfig) -> (PeftModel | PeftMi
     )
     model = get_peft_model(model, peft_config)
     return model
+
+def merge_base_model_with_adapter(base_model: PreTrainedModel, adapter_model_path: str) -> PeftModel:
+    model = PeftModel.from_pretrained(base_model, adapter_model_path)
+    return model.merge_and_unload()
