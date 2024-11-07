@@ -1,3 +1,4 @@
+import torch
 import wandb
 import huggingface_hub as hf_hub
 
@@ -30,6 +31,11 @@ def main(config_path):
     trainer.model.save_pretrained(config.training.output_dir)
     trainer.model.push_to_hub(config.training.output_dir, use_temp_dir=False)
     wandb.finish()
+
+    # Delete old model and tokenizer so we can initialize base model/tokenizer again
+    del model, tokenizer
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
     # Initialize model and tokenizer again so we can combine with adapter model
     model, tokenizer = initialize_model(config)
