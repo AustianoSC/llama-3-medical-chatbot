@@ -26,7 +26,7 @@ def main(config_path):
     # Train model
     trainer = train_model(model, tokenizer, dataset, config)
     
-    # Save and push model
+    # Save and push the adapter model
     trainer.model.save_pretrained(config.training.output_dir)
     trainer.model.push_to_hub(config.training.output_dir, use_temp_dir=False)
     wandb.finish()
