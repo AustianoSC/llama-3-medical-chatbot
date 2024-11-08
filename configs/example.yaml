@@ -33,3 +33,8 @@ peft:
   bias: "none"
   task_type: "CAUSAL_LM"
   target_modules: ['up_proj', 'down_proj', 'gate_proj', 'k_proj', 'q_proj', 'v_proj', 'o_proj']
+
+weights_and_biases:
+  project_name: "llama-3-8b-chat-doctor"
+  job_type: "training"
+  anonymous: "allow"
