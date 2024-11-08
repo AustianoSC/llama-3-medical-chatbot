@@ -6,7 +6,7 @@ def clean_gpu_mem():
         try:
             if torch.is_tensor(obj) or (torch.is_tensor(obj.data) and hasattr(obj, 'data')):
                 del obj
-        except:
+        except Exception:
             continue
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
