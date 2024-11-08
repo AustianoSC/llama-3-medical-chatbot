@@ -4,6 +4,8 @@ import wandb
 import huggingface_hub as hf_hub
 
 from utils.config import load_config
+from utils.clean_gpu_mem import clean_gpu_mem
+
 from core.train import train_model
 from core.datasets import prepare_dataset
 from core.model_init import initialize_model_quantized, initialize_model_for_merge, apply_peft_to_model, merge_base_model_with_adapter
@@ -15,6 +17,11 @@ def main(config_path):
     # HuggingFace and W&B login
     hf_hub.login(config.env_vars.huggingface_api_token)
     wandb.login(key=config.env_vars.wandb_api_key)
+    wandb.init(
+        project=config.weights_and_biases.project_name, 
+        job_type=config.weights_and_biases.job_type, 
+        anonymous=config.weights_and_biases.anonymous
+    )
 
     # Initialize model and tokenizer
     model, tokenizer = initialize_model_quantized(config)
@@ -37,18 +44,7 @@ def main(config_path):
     del model, tokenizer, dataset, trainer.model, trainer
     
     # Cleanup remaning tensors from PyTorch caching
-    for obj in gc.get_objects():
-        try:
-            if torch.is_tensor(obj) or (hasattr(obj, 'data') and torch.is_tensor(obj.data)):
-                del obj
-        except AttributeError:
-            continue
-    if torch.cuda.is_available():
-        torch.cuda.empty_cache()
-        gc.collect()
-    with torch.no_grad():
-        torch.cuda.empty_cache()
-        gc.collect()
+    clean_gpu_mem()
 
     # Initialize model and tokenizer again so we can combine with adapter model
     model, tokenizer = initialize_model_for_merge(config)
