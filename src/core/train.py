@@ -4,6 +4,8 @@ from transformers import TrainingArguments
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from models.AppConfig import AppConfig
+# TODO: Create EvaluatorFactory
+from evals.MultipleEvaluator import MultipleEvaluator
 
 def train_model(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, dataset: DatasetDict, config: AppConfig):
     training_args = TrainingArguments(
@@ -21,18 +23,23 @@ def train_model(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, dataset:
         fp16=config.training.fp16,
         bf16=config.training.bf16,
         group_by_length=config.training.group_by_length,
-        report_to=config.training.report_to
+        report_to=config.training.report_to,
+        do_predict=True
     )
+
+    evaluator = MultipleEvaluator(tokenizer, config.training.evaluation_metrics)
 
     trainer = SFTTrainer(
         model=model,
         train_dataset=dataset["train"],
         eval_dataset=dataset["test"],
+        # TODO: Remove this hardcoded efficency
         max_seq_length=512,
         dataset_text_field="text",
         tokenizer=tokenizer,
         args=training_args,
         packing=False,
+        compute_metrics=evaluator.compute_metrics,
     )
     trainer.train()
     return trainer
