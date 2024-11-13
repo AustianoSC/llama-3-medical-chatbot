@@ -8,6 +8,7 @@ def prepare_dataset(config: AppConfig, tokenizer: PreTrainedTokenizer) -> Datase
     dataset = load_dataset(dataset_config.name, split="all")
     dataset = dataset.shuffle(seed=dataset_config.shuffle_seed).select(range(dataset_config.select_top_n))
 
+    # TODO: Make sure this is the correct way to format the chat template
     def format_chat_template(row):
         row_json = [{"role": "user", "content": row["Patient"]},
                     {"role": "assistant", "content": row["Doctor"]}]
