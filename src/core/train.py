@@ -4,8 +4,7 @@ from transformers import TrainingArguments
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from models.AppConfig import AppConfig
-# TODO: Create EvaluatorFactory
-from evaluators.MultipleEvaluator import MultipleEvaluator
+from evaluators.EvaluatorsFactory import EvaluatorsFactory
 
 def train_model(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, dataset: DatasetDict, config: AppConfig):
     training_args = TrainingArguments(
@@ -27,7 +26,7 @@ def train_model(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, dataset:
         do_predict=True
     )
 
-    evaluator = MultipleEvaluator(tokenizer, config.training.evaluation_metrics)
+    evaluator = EvaluatorsFactory.get_evaluator(tokenizer, config.training.evaluation_metrics)
 
     trainer = SFTTrainer(
         model=model,
