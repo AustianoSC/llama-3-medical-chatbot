@@ -5,7 +5,7 @@ from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from models.AppConfig import AppConfig
 # TODO: Create EvaluatorFactory
-from evals.MultipleEvaluator import MultipleEvaluator
+from evaluators.MultipleEvaluator import MultipleEvaluator
 
 def train_model(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, dataset: DatasetDict, config: AppConfig):
     training_args = TrainingArguments(
