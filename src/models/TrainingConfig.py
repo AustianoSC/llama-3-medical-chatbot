@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, Union
 
 class TrainingConfig(BaseModel):
     output_dir: str = Field(..., title="Output Directory", description="The local and HuggingFace directory to save the trained model.")
@@ -19,3 +19,4 @@ class TrainingConfig(BaseModel):
     bf16: Optional[bool] = Field(False, title="BF16", description="Whether to use BF16 for training.")
     group_by_length: Optional[bool] = Field(False, title="Group by Length", description="Whether to group the dataset by length.")
     report_to: Optional[str] = Field("wandb", title="Report To", description="The service to report training metrics to.")
+    evaluation_metrics: Optional[Union[list[str], str]] = Field([], title="Evaluation Metrics", description="The list of strings of evaluation metrics to be used during the training process.")
