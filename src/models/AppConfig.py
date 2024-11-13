@@ -1,10 +1,10 @@
 from pydantic import BaseModel, Field
-from models.PeftConfig import PeftConfig
-from models.ModelConfig import ModelConfig
-from models.DatasetConfig import DatasetConfig
-from models.TrainingConfig import TrainingConfig
-from models.EnvironmentVariables import EnvironmentVariables
-from models.WeightsAndBiasesConfig import WeightsAndBiasesConfig
+from .PeftConfig import PeftConfig
+from .ModelConfig import ModelConfig
+from .DatasetConfig import DatasetConfig
+from .TrainingConfig import TrainingConfig
+from .EnvironmentVariables import EnvironmentVariables
+from .WeightsAndBiasesConfig import WeightsAndBiasesConfig
 
 class AppConfig(BaseModel):
     model: ModelConfig = Field(..., title="Model Configuration", description="The name of the datasets repo on HuggingFace or path to the datasets local directory.")
