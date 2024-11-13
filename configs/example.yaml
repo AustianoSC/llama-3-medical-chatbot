@@ -25,6 +25,7 @@ training:
   bf16: false
   group_by_length: true
   report_to: "wandb"
+  evaluation_metrics: ["bleu", "rouge"]
 
 peft:
   r: 16
