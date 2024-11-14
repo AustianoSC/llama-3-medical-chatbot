@@ -18,16 +18,16 @@ def run_pipeline(config: AppConfig):
     )
 
     # Initialize model and tokenizer
-    model, tokenizer = initialize_model_quantized(config)
+    model, tokenizer = initialize_model_quantized(config.model)
     
     # Apply PEFT
-    model = apply_peft_to_model(model, config)
+    model = apply_peft_to_model(model, config.peft)
     
     # Prepare dataset
     dataset = load_dataset(config.dataset, tokenizer)
     
     # Train model
-    trainer = train_model(model, tokenizer, dataset, config)
+    trainer = train_model(model, tokenizer, dataset, config.training)
     
     # Save and push the adapter model
     trainer.model.save_pretrained(config.training.output_dir)

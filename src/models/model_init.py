@@ -5,10 +5,9 @@ from peft.peft_model import PeftModel
 from peft.mixed_model import PeftMixedModel
 from trl import setup_chat_format
 
-from ..data_models import AppConfig
+from ..data_models import ModelConfig, PeftConfig
 
-def initialize_model_quantized(config: AppConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
-    model_config = config.model
+def initialize_model_quantized(model_config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=model_config.load_in_4bit,
         bnb_4bit_compute_dtype=getattr(torch, model_config.torch_dtype),
@@ -23,8 +22,7 @@ def initialize_model_quantized(config: AppConfig) -> tuple[PreTrainedModel, PreT
     model, tokenizer = setup_chat_format(model, tokenizer)
     return model, tokenizer
 
-def initialize_model_for_merge(config: AppConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
-    model_config = config.model
+def initialize_model_for_merge(model_config: ModelConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
     tokenizer = AutoTokenizer.from_pretrained(model_config.path)
     model = AutoModelForCausalLM.from_pretrained(
             model_config.path,
@@ -44,16 +42,16 @@ def initialize_model_for_merge(config: AppConfig) -> tuple[PreTrainedModel, PreT
     
     return model, tokenizer
 
-def apply_peft_to_model(model: PreTrainedModel, config: AppConfig) -> (PeftModel | PeftMixedModel):
-    peft_config = LoraConfig(
-        r=config.peft.r,
-        lora_alpha=config.peft.lora_alpha,
-        lora_dropout=config.peft.lora_dropout,
-        bias=config.peft.bias,
-        task_type=config.peft.task_type,
-        target_modules=config.peft.target_modules
+def apply_peft_to_model(model: PreTrainedModel, peft_config: PeftConfig) -> (PeftModel | PeftMixedModel):
+    peft_model_config = LoraConfig(
+        r=peft_config.r,
+        lora_alpha=peft_config.lora_alpha,
+        lora_dropout=peft_config.lora_dropout,
+        bias=peft_config.bias,
+        task_type=peft_config.task_type,
+        target_modules=peft_config.target_modules
     )
-    model = get_peft_model(model, peft_config)
+    model = get_peft_model(model, peft_model_config)
     return model
 
 def merge_base_model_with_adapter(base_model: PreTrainedModel, adapter_model_path: str) -> PeftModel:
