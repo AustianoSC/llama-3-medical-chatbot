@@ -3,9 +3,8 @@ import yaml
 from dotenv import load_dotenv
 from pydantic import ValidationError
 
-from models.AppConfig import AppConfig
-
-from enums.EnvironmentVariables import EnvironmentVariables
+from ..data_models import AppConfig
+from ..enums import EnvironmentVariables
 
 def get_required_env_var(env_var_name: str) -> str:
     env_var = os.getenv(env_var_name)
