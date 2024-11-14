@@ -15,9 +15,5 @@ class F1Evaluator(BaseEvaluator):
         # Get the token integer (index) of the maximum logit
         predictions = np.argmax(logits, axis=-1)
 
-        # Decode predictions and labels from integers to strings
-        decoded_preds = self.tokenizer.batch_decode(predictions, skip_special_tokens=True)
-        decoded_labels = self.tokenizer.batch_decode(labels, skip_special_tokens=True)
-
-        result = self.f1.compute(predictions=decoded_preds, references=decoded_labels)
+        result = self.f1.compute(predictions=predictions, references=labels)
         return result
