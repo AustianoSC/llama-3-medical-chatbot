@@ -24,7 +24,7 @@ def run_pipeline(config: AppConfig):
     model = apply_peft_to_model(model, config)
     
     # Prepare dataset
-    dataset = load_dataset(config, tokenizer)
+    dataset = load_dataset(config.dataset, tokenizer)
     
     # Train model
     trainer = train_model(model, tokenizer, dataset, config)
