@@ -26,7 +26,7 @@ def train_model(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, dataset:
         do_predict=True
     )
 
-    evaluator = EvaluatorsFactory.get_evaluator(tokenizer, config.training.evaluation_metrics)
+    evaluator = EvaluatorsFactory.get_evaluator(config.training.evaluation_metrics, tokenizer)
 
     trainer = SFTTrainer(
         model=model,
