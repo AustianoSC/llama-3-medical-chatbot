@@ -1,12 +1,7 @@
 from typing import Union
 from transformers import PreTrainedTokenizer
 
-from .F1Evaluator import F1Evaluator
-from .BaseEvaluator import BaseEvaluator
-from .BleuEvaluator import BleuEvaluator
-from .RougeEvaluator import RougeEvaluator 
-from .MultipleEvaluator import MultipleEvaluator
-from .ExactMatchEvaluator import ExactMatchEvaluator
+from . import BaseEvaluator, F1Evaluator, ExactMatchEvaluator, BleuEvaluator, RougeEvaluator, MultipleEvaluator
 
 from ..enums import Evaluators
 

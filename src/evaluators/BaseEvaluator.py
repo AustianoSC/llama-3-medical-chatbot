@@ -6,5 +6,5 @@ class BaseEvaluator(ABC):
         self.tokenizer = tokenizer
 
     @abstractmethod
-    def compute_metrics(self, predictions, labels):
+    def compute_metrics(self, eval_pred):
         pass

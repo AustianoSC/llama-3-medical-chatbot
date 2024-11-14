@@ -2,7 +2,7 @@ import evaluate
 import numpy as np
 from transformers import PreTrainedTokenizer
 
-from .BaseEvaluator import BaseEvaluator
+from . import BaseEvaluator
 
 class F1Evaluator(BaseEvaluator):
     def __init__(self, tokenizer: PreTrainedTokenizer):
