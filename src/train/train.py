@@ -3,8 +3,8 @@ from datasets import DatasetDict
 from transformers import TrainingArguments
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from models.AppConfig import AppConfig
-from evaluators.EvaluatorsFactory import EvaluatorsFactory
+from ..data_models import AppConfig
+from ..evaluators import EvaluatorsFactory
 
 def train_model(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, dataset: DatasetDict, config: AppConfig):
     training_args = TrainingArguments(

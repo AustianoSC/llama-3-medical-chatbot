@@ -1,11 +1,12 @@
-from datasets import load_dataset, DatasetDict
+import multiprocessing
+import datasets
 from transformers import PreTrainedTokenizer
 
-from models.AppConfig import AppConfig
+from ..data_models import AppConfig
 
-def prepare_dataset(config: AppConfig, tokenizer: PreTrainedTokenizer) -> DatasetDict:
+def load_dataset(config: AppConfig, tokenizer: PreTrainedTokenizer) -> datasets.DatasetDict:
     dataset_config = config.dataset
-    dataset = load_dataset(dataset_config.name, split="all")
+    dataset = datasets.load_dataset(dataset_config.name, split="all")
     dataset = dataset.shuffle(seed=dataset_config.shuffle_seed).select(range(dataset_config.select_top_n))
 
     # TODO: Make sure this is the correct way to format the chat template
@@ -14,7 +15,9 @@ def prepare_dataset(config: AppConfig, tokenizer: PreTrainedTokenizer) -> Datase
                     {"role": "assistant", "content": row["Doctor"]}]
         row["text"] = tokenizer.apply_chat_template(row_json, tokenize=False)
         return row
-
-    dataset = dataset.map(format_chat_template, num_proc=4)
+    
+    num_proc = multiprocessing.cpu_count()
+    import pdb; pdb.set_trace()
+    dataset = dataset.map(format_chat_template, num_proc=num_proc)
     dataset = dataset.train_test_split(test_size=dataset_config.test_split)
     return dataset

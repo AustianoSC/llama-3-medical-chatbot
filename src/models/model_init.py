@@ -5,7 +5,7 @@ from peft.peft_model import PeftModel
 from peft.mixed_model import PeftMixedModel
 from trl import setup_chat_format
 
-from models.AppConfig import AppConfig
+from ..data_models import AppConfig
 
 def initialize_model_quantized(config: AppConfig) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
     model_config = config.model
