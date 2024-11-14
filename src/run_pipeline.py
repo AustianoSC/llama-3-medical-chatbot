@@ -41,7 +41,7 @@ def run_pipeline(config: AppConfig):
     clean_gpu_mem()
 
     # Initialize model and tokenizer again so we can combine with adapter model
-    model, tokenizer = initialize_model_for_merge(config)
+    model, tokenizer = initialize_model_for_merge(config.model)
 
     # Merge base model with adapter model
     model = merge_base_model_with_adapter(model, config.training.output_dir)
