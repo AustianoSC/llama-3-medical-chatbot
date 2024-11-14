@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Run Pipeline Default Arg",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/main.py",
+        "console": "integratedTerminal",
+        "args": ["--config", "configs/example.yaml"]
+      },
+      {
+        "name": "Run Pipeline User Input Arg",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/main.py",
+        "console": "integratedTerminal",
+        "args": ["--config", "${input:configFile}"],
+      }
+    ]
+  }
