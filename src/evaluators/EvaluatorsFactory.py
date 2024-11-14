@@ -7,7 +7,7 @@ from ..enums import Evaluators
 
 class EvaluatorsFactory:
     _evaluator_map = {
-        Evaluators.ExactMatch.value: ExactMatchEvaluator,
+        Evaluators.EXACT_MATCH.value: ExactMatchEvaluator,
         Evaluators.F1.value: F1Evaluator,
         Evaluators.BLEU.value: BleuEvaluator,
         Evaluators.ROUGE.value: RougeEvaluator
