@@ -4,11 +4,13 @@ import numpy as np
 from transformers import PreTrainedTokenizer
 
 from . import BaseEvaluator
+from ..enums import EvaluatorInputType
 
 class MultipleEvaluator(BaseEvaluator):
     def __init__(self, tokenizer: PreTrainedTokenizer, eval_metrics: list[str]):
         super().__init__(tokenizer)
-        self.eval_metrics = evaluate.combine([evaluate.load(metric) for metric in eval_metrics])
+        self.eval_metrics_str = evaluate.combine([evaluate.load(metric) for metric in eval_metrics if isinstance(EvaluatorInputType[metric.upper()].value, str)])
+        self.eval_metrics_int = evaluate.combine([evaluate.load(metric) for metric in eval_metrics if isinstance(EvaluatorInputType[metric.upper()].value, int)])
 
     def compute_metrics(self, eval_pred):
         logits, labels = eval_pred
@@ -28,5 +30,8 @@ class MultipleEvaluator(BaseEvaluator):
         decoded_preds = ["\n".join(nltk.sent_tokenize(pred.strip())) for pred in decoded_preds]
         decoded_labels = ["\n".join(nltk.sent_tokenize(label.strip())) for label in decoded_labels]
 
-        result = self.eval_metrics.compute(predictions=decoded_preds, references=decoded_labels)
+        result_int = self.eval_metrics_int.compute(predictions=predictions, references=labels)
+        result_str = self.eval_metrics.compute(predictions=decoded_preds, references=decoded_labels)
+
+        result = result_str | result_int
         return result
