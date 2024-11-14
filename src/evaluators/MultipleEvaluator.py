@@ -31,7 +31,7 @@ class MultipleEvaluator(BaseEvaluator):
         decoded_labels = ["\n".join(nltk.sent_tokenize(label.strip())) for label in decoded_labels]
 
         result_int = self.eval_metrics_int.compute(predictions=predictions, references=labels)
-        result_str = self.eval_metrics.compute(predictions=decoded_preds, references=decoded_labels)
+        result_str = self.eval_metrics_str.compute(predictions=decoded_preds, references=decoded_labels)
 
         result = result_str | result_int
         return result
