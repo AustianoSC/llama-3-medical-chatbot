@@ -1,9 +1,13 @@
 from typing import Union
 from transformers import PreTrainedTokenizer
 
-from . import BaseEvaluator, F1Evaluator, ExactMatchEvaluator, BleuEvaluator, RougeEvaluator, MultipleEvaluator
-
 from ..enums import Evaluators
+from .BaseEvaluator import BaseEvaluator
+from .F1Evaluator import F1Evaluator
+from .BleuEvaluator import BleuEvaluator
+from .RougeEvaluator import RougeEvaluator
+from .MultipleEvaluator import MultipleEvaluator
+from .ExactMatchEvaluator import ExactMatchEvaluator
 
 class EvaluatorsFactory:
     _evaluator_map = {
