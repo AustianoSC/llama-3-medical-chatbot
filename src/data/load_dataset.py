@@ -17,7 +17,6 @@ def load_dataset(config: AppConfig, tokenizer: PreTrainedTokenizer) -> datasets.
         return row
     
     num_proc = multiprocessing.cpu_count()
-    import pdb; pdb.set_trace()
     dataset = dataset.map(format_chat_template, num_proc=num_proc)
     dataset = dataset.train_test_split(test_size=dataset_config.test_split)
     return dataset
