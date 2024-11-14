@@ -1,17 +1,13 @@
 import wandb
 import huggingface_hub as hf_hub
 
-from utils.config import load_config
-from utils.clean_gpu_mem import clean_gpu_mem
+from .train import train_model
+from .data import load_dataset
+from .utils import clean_gpu_mem
+from .models import initialize_model_quantized, initialize_model_for_merge, apply_peft_to_model, merge_base_model_with_adapter
+from .data_models import AppConfig
 
-from core.train import train_model
-from core.datasets import prepare_dataset
-from core.model_init import initialize_model_quantized, initialize_model_for_merge, apply_peft_to_model, merge_base_model_with_adapter
-
-def main(config_path):
-    # Load environment variables and configs
-    config = load_config(config_path)
-
+def run_pipeline(config: AppConfig):
     # HuggingFace and W&B login
     hf_hub.login(config.env_vars.huggingface_api_token)
     wandb.login(key=config.env_vars.wandb_api_key)
@@ -28,7 +24,7 @@ def main(config_path):
     model = apply_peft_to_model(model, config)
     
     # Prepare dataset
-    dataset = prepare_dataset(config, tokenizer)
+    dataset = load_dataset(config, tokenizer)
     
     # Train model
     trainer = train_model(model, tokenizer, dataset, config)
@@ -55,7 +51,3 @@ def main(config_path):
     tokenizer.save_pretrained(config.training.output_dir)
     model.push_to_hub(config.training.output_dir, use_temp_dir=False)
     tokenizer.push_to_hub(config.training.output_dir, use_temp_dir=False)
-
-if __name__ == "__main__":
-    config_path = "configs/example.yaml"
-    main(config_path)
