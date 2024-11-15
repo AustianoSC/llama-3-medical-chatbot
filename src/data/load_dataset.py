@@ -12,7 +12,7 @@ def load_dataset(config: DatasetConfig, tokenizer: PreTrainedTokenizer) -> datas
     if config.select_top_n:
         dataset = dataset.select(range(config.select_top_n))
 
-    preprocessor = PreProcessorFactory.get_preprocessor(config.name, tokenizer)
+    preprocessor = PreProcessorFactory.get_preprocessor(config.name.replace('/', '_'), tokenizer)
     
     num_proc = multiprocessing.cpu_count()
     dataset = dataset.map(preprocessor.format_chat_template, num_proc=num_proc)
