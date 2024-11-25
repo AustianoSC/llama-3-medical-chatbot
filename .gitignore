@@ -169,3 +169,6 @@ llama-3-8b-chat-doctor
 
 # Misc files
 convert_llama_weights_to_hf.py
+convert_env_requirements.py
+convert_env_requirements.sh
+plan.ipynb
