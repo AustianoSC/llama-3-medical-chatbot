@@ -5,10 +5,10 @@ from .BaseProcessor import BaseProcessor
 from .AiMedicalChatbotProcessor import AiMedicalChatbotProcessor
 
 class PreProcessorFactory:
-    _evaluator_map = {
+    _preprocessor_map = {
         DatasetProcessors.RUSLANMV_AI_MEDICAL_CHATBOT.name: AiMedicalChatbotProcessor,
     }
 
     @staticmethod
     def get_preprocessor(dataset_name: str, tokenizer: PreTrainedTokenizer) -> BaseProcessor:
-        return PreProcessorFactory._evaluator_map[dataset_name.upper()](tokenizer)
+        return PreProcessorFactory._preprocessor_map[dataset_name.upper()](tokenizer)
