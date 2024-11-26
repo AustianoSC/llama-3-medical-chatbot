@@ -2,8 +2,13 @@ from transformers import PreTrainedTokenizer
 
 from ...enums import DatasetProcessors
 from .BaseProcessor import BaseProcessor
+from .AiMedicalChatbotProcessor import AiMedicalChatbotProcessor
 
 class PreProcessorFactory:
+    _evaluator_map = {
+        DatasetProcessors.RUSLANMV_AI_MEDICAL_CHATBOT.name: AiMedicalChatbotProcessor,
+    }
+
     @staticmethod
     def get_preprocessor(dataset_name: str, tokenizer: PreTrainedTokenizer) -> BaseProcessor:
-        return DatasetProcessors[dataset_name.upper()].value(tokenizer)
+        return PreProcessorFactory._evaluator_map[dataset_name.upper()](tokenizer)
