@@ -1,8 +1,9 @@
+from transformers import PreTrainedTokenizer
 from .BaseProcessor import BaseProcessor
 
 class AiMedicalChatbotProcessor(BaseProcessor):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, tokenizer: PreTrainedTokenizer):
+        super().__init__(tokenizer)
 
     def format_chat_template(self, row):
         row_json = [{"role": "user", "content": row["Patient"]},
